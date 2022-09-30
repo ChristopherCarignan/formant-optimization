@@ -5,7 +5,7 @@ This Praat script provides an automated optimzation of formant values F1-F5 by i
 
 The procedure is as follows:
 
-* Iterate through F5 ceilings in 50 Hz steps within the range 4500-6000 Hz
+* Iterate through F5 ceilings in 50 Hz steps within the range 4000-6000 Hz
 * Concatenate F1-F5 estimates at each ceiling step
 * For each time step, find the median F1-F5 values across all estimates
 * Append the median values to a table along with the time stamp
