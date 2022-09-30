@@ -20,7 +20,7 @@ select Sound 'filename$'
 To Formant (burg)... timestep 5 baseline 0.025 50
 Rename... 'filename$'_baseline
 
-# create baseline formant track matrices (4500 Hz ceiling)
+# create baseline formant track matrices
 for i from 1 to 5
 	select Formant 'filename$'_baseline
 	To Matrix... i
