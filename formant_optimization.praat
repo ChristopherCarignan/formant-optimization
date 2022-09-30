@@ -13,7 +13,7 @@
 
 filename$ = selected$("Sound")
 
-baseline = 4000
+baseline = 3500
 timestep = 0.005
 
 select Sound 'filename$'
@@ -27,8 +27,8 @@ for i from 1 to 5
 	Rename... f'i'
 endfor
 
-# iterate through F5 ceilings (4000 Hz - 6000 Hz) in steps of 50 Hz
-for i from 1 to 40
+# iterate through F5 ceilings (3500 Hz - 6000 Hz) in steps of 50 Hz
+for i from 1 to 50
 	step = i*50
 	ceiling = baseline + step
 
