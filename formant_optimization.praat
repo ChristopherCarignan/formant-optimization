@@ -13,11 +13,12 @@
 
 filename$ = selected$("Sound")
 
-baseline = 3500
+ceil_low = 3500
+ceil_hi = 6000
 timestep = 0.005
 
 select Sound 'filename$'
-To Formant (burg)... timestep 5 baseline 0.025 50
+To Formant (burg)... timestep 5 ceil_low 0.025 50
 Rename... 'filename$'_baseline
 
 # create baseline formant track matrices
@@ -27,10 +28,12 @@ for i from 1 to 5
 	Rename... f'i'
 endfor
 
-# iterate through F5 ceilings (3500 Hz - 6000 Hz) in steps of 50 Hz
-for i from 1 to 50
+# iterate through F5 ceilings (ceil_low Hz - ceil_high Hz) in steps of 50 Hz
+steps = (ceil_hi - ceil_low)/50
+
+for i from 1 to steps
 	step = i*50
-	ceiling = baseline + step
+	ceiling = ceil_low + step
 
 	# create formant tracks with the current ceiling
 	select Sound 'filename$'
