@@ -10,4 +10,6 @@ The procedure is as follows:
 * For each time step, find the median F1-F5 values across all estimates
 * Append the median values to a table along with the time stamp
 
+After the script has completed, a table called "formants" will remain in the Object window. This table can then be saved to your desired data format.
+
 Note: before running the script, make sure that a sound object is selected in the Objects window.
