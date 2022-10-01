@@ -1,7 +1,7 @@
 # formant-optimization
 Praat script for automatic formant optimization
 
-This Praat script provides an automated optimzation of formant values F1-F5 by iterating through a range of possible formant ceiling values and selecting the median formant estimate across this range.
+This Praat script provides an automated optimzation of formant values F1-F5 by iterating through a range of possible formant ceiling values. The median formant value across an outlier-trimmed distribution is selected as an estimate of measurement stability.
 
 The procedure is as follows:
 
