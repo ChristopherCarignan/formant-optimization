@@ -72,12 +72,12 @@ Create Table with column names... formants points time f1 f2 f3 f4 f5
 # iterate through each time step
 for i from 1 to points
 	# calculate the median formant value at this time step
-	# after trimming data via +/ 2 SD outlier removal
+	# after trimming data via +/- 2 SD outlier removal
 	for j from 1 to 5
 		select Matrix f'j'
 		f'j'# = Get all values in column... i
 
-		# outlier identification
+		# outlier identification for this formant's estimates
 		sd = stdev(f'j'#)
 		thresh_lo = mean(f'j'#) - 2*sd
 		thresh_hi = mean(f'j'#) + 2*sd
