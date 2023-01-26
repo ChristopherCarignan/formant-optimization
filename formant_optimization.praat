@@ -4,19 +4,23 @@
 # Department of Speech, Hearing and Phonetic Sciences
 # University College London
 # 30 September, 2022
+#
+# Updates
+# 26 January, 2023:  changed estimation of the point of measurement stability
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 ### IMPORTANT ###
 ### Select a sound object in the Praat window before running script
 ###
 
-
-filename$ = selected$("Sound")
-
+# parameters
 ceil_lo = 3500
 ceil_hi = 6000
 timestep = 0.005
 
+filename$ = selected$("Sound")
+
+# create baseline formant object
 select Sound 'filename$'
 To Formant (burg)... timestep 5 ceil_lo 0.025 50
 Rename... 'filename$'_baseline
@@ -32,6 +36,7 @@ endfor
 steps = (ceil_hi - ceil_lo)/50
 
 for i from 1 to steps
+	# get current F5 ceiling (Hz)
 	step = i*50
 	ceiling = ceil_lo + step
 
@@ -71,46 +76,44 @@ Create Table with column names... formants points time f1 f2 f3 f4 f5
 
 # iterate through each time step
 for i from 1 to points
-	# calculate the median formant value at this time step
-	# after trimming data via +/- 2 SD outlier removal
+
+	# estimate the point of measurement stability for each formant at the time step
 	for j from 1 to 5
+
 		select Matrix f'j'
 		f'j'# = Get all values in column... i
 
-		# outlier identification for this formant's estimates
-		sd = stdev(f'j'#)
-		thresh_lo = mean(f'j'#) - 2*sd
-		thresh_hi = mean(f'j'#) + 2*sd
+		# calculate the first difference (velocity) of the formant track
+		diff# = zero#(measures-1)		
+		for k from 1 to measures-1
+			diff#[k] = abs(f'j'#[k+1] - f'j'#[k])
+		endfor
 
-		x = 0
-		for k from 1 to measures
-			if (f'j'#[k] < thresh_lo or f'j'#[k] > thresh_hi)
-				x = x+1
-			endif
+		# find the maximum absolute difference
+		# this is the point of divergence between (potentially) two stability points
+		# (we want the second one, since the formant ceilings are increasing)
+		maxidx = imax(diff#)
+
+		# trim from the maximum index
+		ftrim# = zero#(1+measures-maxidx)
+		y = 1
+		for k from maxidx to measures
+			ftrim#[y] = f'j'#[k]
+			y = y+1
+		endfor
+
+		# calculate the first difference of the trimmed data
+		diff# = zero#(measures-maxidx)
+		for k from 1 to measures-maxidx-1
+			diff#[k] = abs(ftrim#[k+1] - ftrim#[k])
 		endfor
 		
-		# if outliers are found, trim the data
-		if x > 0
-			ftrim# = zero#(measures-x)
-			y = 1
-			for k from 1 to measures
-				if not (f'j'#[k] < thresh_lo or f'j'#[k] > thresh_hi)
-					ftrim#[y] = f'j'#[k]
-					y = y+1
-				endif
-			endfor
-
-			# take the median value of trimmed measures
-			median = round(size(ftrim#)/2)
-			ftrim# = sort#(ftrim#)
-			f'j' = ftrim#[median]
+		# find the minimum absolute difference of the trimmed data 
+		# this is the estimate of the measurement stability point
+		minidx = imax(0-diff#)
 		
-		# if outliers are not found, take the median value of all measures
-		else
-			median = round(measures/2)
-			f'j'# = sort#(f'j'#)
-			f'j' = f'j'#[median]
-		endif
+		# get the formant value at the stability point
+		f'j' = ftrim#[minidx]
 	endfor 
 
 	select Formant 'filename$'_baseline
