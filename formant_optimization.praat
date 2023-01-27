@@ -80,10 +80,11 @@ for i from 1 to points
 	# estimate the point of measurement stability for each formant at the time step
 	for j from 1 to 5
 
+        # get all estimated values for this formant at this time step
 		select Matrix f'j'
 		f'j'# = Get all values in column... i
 
-		# calculate the first difference (velocity) of the formant track
+		# calculate the first difference (velocity) of the formant values
 		diff# = zero#(measures-1)		
 		for k from 1 to measures-1
 			diff#[k] = abs(f'j'#[k+1] - f'j'#[k])
